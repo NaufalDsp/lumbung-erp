@@ -54,3 +54,9 @@ frontend/dist-ssr/
 *.swo
 .DS_Store
 Thumbs.db
+
+# Documentation / Markdown
+*.md
+!README.md
+
+
