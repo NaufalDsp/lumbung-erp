@@ -29,6 +29,7 @@ try:
         MIDTRANS_CLIENT_KEY: str = ""
         MIDTRANS_IS_PRODUCTION: bool = False
         TELEGRAM_BOT_TOKEN: str = ""
+        TELEGRAM_CHAT_ID: str = ""
         RESEND_API_KEY: str = ""
         INTERNAL_JOB_SECRET: str = "dev-internal-secret"
 
@@ -76,6 +77,7 @@ except ImportError:
         MIDTRANS_IS_PRODUCTION: bool = os.getenv(
             "MIDTRANS_IS_PRODUCTION", "false").lower() in ("true", "1")
         TELEGRAM_BOT_TOKEN: str = os.getenv("TELEGRAM_BOT_TOKEN", "")
+        TELEGRAM_CHAT_ID: str = os.getenv("TELEGRAM_CHAT_ID", "")
         RESEND_API_KEY: str = os.getenv("RESEND_API_KEY", "")
         INTERNAL_JOB_SECRET: str = os.getenv(
             "INTERNAL_JOB_SECRET", "dev-internal-secret")
