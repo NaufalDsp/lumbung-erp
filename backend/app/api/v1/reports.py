@@ -2,7 +2,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_current_user, require_permission
+from app.api.deps import AuthenticatedUser, get_current_user, require_permission
 from app.api.v1.schemas.reports import (
     ARAgingResponse,
     LowStockItem,
@@ -10,7 +10,8 @@ from app.api.v1.schemas.reports import (
     StockCardResponse,
     StockValuationResponse,
 )
-from app.models.base import get_db
+from app.core.permissions import Permission
+from app.models.database import get_db
 from app.models.user import User
 from app.services.reports import (
     check_and_notify_low_stock,
@@ -27,7 +28,8 @@ router = APIRouter(prefix="/reports", tags=["Reports & Analytics"])
 @router.get("/stock-valuation", response_model=StockValuationResponse)
 async def stock_valuation(
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_permission("read", "report")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.VIEW_INVENTORY_VALUATION_COGS)),
 ):
     return await get_stock_valuation_report(db)
 
@@ -35,7 +37,8 @@ async def stock_valuation(
 @router.get("/stock-valuation/csv")
 async def stock_valuation_csv(
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_permission("read", "report")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.VIEW_INVENTORY_VALUATION_COGS)),
 ):
     data = await get_stock_valuation_report(db)
     headers = [
@@ -77,7 +80,8 @@ async def sales_summary(
     start_date: datetime | None = Query(default=None),
     end_date: datetime | None = Query(default=None),
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_permission("read", "report")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.VIEW_INVENTORY_VALUATION_COGS)),
 ):
     return await get_sales_summary_report(db, start_date=start_date, end_date=end_date)
 
@@ -85,7 +89,8 @@ async def sales_summary(
 @router.get("/ar-aging", response_model=ARAgingResponse)
 async def ar_aging(
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_permission("read", "report")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.VIEW_INVENTORY_VALUATION_COGS)),
 ):
     return await get_ar_aging_report(db)
 
@@ -93,7 +98,8 @@ async def ar_aging(
 @router.get("/ar-aging/csv")
 async def ar_aging_csv(
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_permission("read", "report")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.VIEW_INVENTORY_VALUATION_COGS)),
 ):
     data = await get_ar_aging_report(db)
     headers = [
@@ -131,7 +137,8 @@ async def stock_card(
     product_id: int,
     limit: int = Query(default=100, le=500),
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_permission("read", "report")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.VIEW_INVENTORY_VALUATION_COGS)),
 ):
     return await get_stock_card_report(db, product_id=product_id, limit=limit)
 
@@ -139,7 +146,8 @@ async def stock_card(
 @router.get("/low-stock", response_model=list[LowStockItem])
 async def list_low_stock(
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_permission("read", "report")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.VIEW_INVENTORY_VALUATION_COGS)),
 ):
     return await check_and_notify_low_stock(db, send_telegram=False)
 
@@ -147,6 +155,7 @@ async def list_low_stock(
 @router.post("/low-stock/trigger-alerts", response_model=list[LowStockItem])
 async def trigger_low_stock_alerts(
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_permission("manage", "system")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.MANAGE_USERS_SETTINGS)),
 ):
     return await check_and_notify_low_stock(db, send_telegram=True)

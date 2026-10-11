@@ -268,6 +268,23 @@ async def logout(
     return {"message": "Berhasil keluar"}
 
 
+@router.post("/reset-demo")
+async def reset_demo(
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> dict[str, str]:
+    """Resets database demo data deterministically. Available in demo mode."""
+    if not settings.DEMO_MODE:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail={"error": {"code": "MODE_DEMO_NONAKTIF",
+                              "message": "Reset data hanya diizinkan dalam mode demo."}},
+        )
+
+    from app.services.seed import reset_demo_data
+
+    return await reset_demo_data(db)
+
+
 @router.get("/me", response_model=UserResponse)
 async def get_my_profile(
     current_user: Annotated[AuthenticatedUser, Depends(get_current_user)],

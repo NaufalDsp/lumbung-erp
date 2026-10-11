@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.domain.exceptions import DomainError
-from app.models.base import get_db
+from app.models.database import get_db
 from app.services.invoicing import process_midtrans_webhook
 
 router = APIRouter(prefix="/webhooks", tags=["Webhooks"])

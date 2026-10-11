@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
-from app.api.deps import require_permission
+from app.api.deps import AuthenticatedUser, require_permission
+from app.core.permissions import Permission
 from app.integrations.notifications import get_telegram_notifier
 from app.models.user import User
 
@@ -16,7 +17,8 @@ class TestTelegramRequest(BaseModel):
 @router.post("/test-telegram")
 async def test_telegram_connection(
     req: TestTelegramRequest,
-    current_user: User = Depends(require_permission("manage", "system")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.MANAGE_USERS_SETTINGS)),
 ):
     notifier = get_telegram_notifier()
     success = await notifier.send_message(text=req.message, chat_id=req.chat_id)

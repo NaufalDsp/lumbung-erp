@@ -17,7 +17,7 @@ export interface ApiResponse<T = any> {
   statusCode: number;
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE || "/api/v1";
+const API_BASE = (import.meta as any).env?.VITE_API_BASE || "/api/v1";
 
 class ApiClient {
   private accessToken: string | null = null;
@@ -80,7 +80,6 @@ class ApiClient {
    * Pings /health endpoint to detect cold-start or database connectivity.
    */
   public async checkHealth(): Promise<{ status: string; database: boolean }> {
-    const startTime = Date.now();
     try {
       const resp = await fetch(`${API_BASE}/health`, { method: "GET" });
       if (resp.ok) {
@@ -98,9 +97,53 @@ class ApiClient {
   }
 
   /**
-   * 1-Click Demo Login switching between persona roles.
+   * Enterprise User Login with standard email & password.
    */
-  public async demoLogin(
+  public async login(email: string, password: string): Promise<UserSession> {
+    const resp = await fetch(`${API_BASE}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!resp.ok) {
+      let msg = "Kombinasi email dan kata sandi tidak cocok";
+      try {
+        const err = await resp.json();
+        msg =
+          err.detail?.error?.message ||
+          err.detail?.message ||
+          err.detail ||
+          msg;
+      } catch {
+        // use default message
+      }
+      throw new Error(msg);
+    }
+
+    const data = await resp.json();
+    this.setSession(data.access_token, data.user);
+    this.setColdStart(false);
+    return data.user;
+  }
+
+  /**
+   * Terminates active session.
+   */
+  public async logout(): Promise<void> {
+    try {
+      await this.post("/auth/logout");
+    } catch {
+      // ignore network errors on logout
+    } finally {
+      this.clearSession();
+    }
+  }
+
+  /**
+   * Internal session switcher for role-based testing.
+   */
+  public async switchRole(
     role: "admin" | "sales" | "warehouse" | "finance",
   ): Promise<UserSession> {
     const resp = await fetch(`${API_BASE}/auth/demo-login`, {
@@ -110,7 +153,7 @@ class ApiClient {
     });
 
     if (!resp.ok) {
-      throw new Error("Gagal login demo persona");
+      throw new Error("Gagal beralih akun");
     }
 
     const data = await resp.json();

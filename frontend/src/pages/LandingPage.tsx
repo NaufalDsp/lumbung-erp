@@ -1,4 +1,14 @@
 import React from "react";
+import {
+  ArrowRight,
+  Building2,
+  Cpu,
+  CreditCard,
+  Database,
+  FileCode2,
+  ShieldCheck,
+  UserCheck,
+} from "lucide-react";
 import { api, UserSession } from "../api/client";
 
 interface LandingPageProps {
@@ -14,7 +24,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     role: "admin" | "sales" | "warehouse" | "finance",
   ) => {
     try {
-      const user = await api.demoLogin(role);
+      const user = await api.switchRole(role);
       onLoginPersona(user);
       onNavigate("dashboard");
     } catch (err: any) {
@@ -23,13 +33,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   };
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 24px" }}>
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "40px 24px" }}>
       {/* Hero Section */}
       <section style={{ textAlign: "center", marginBottom: "56px" }}>
         <div
           style={{
-            display: "inline-block",
-            padding: "4px 12px",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "4px 14px",
             borderRadius: "16px",
             backgroundColor: "var(--grain-wash)",
             color: "var(--grain)",
@@ -37,56 +49,71 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             fontWeight: 600,
             marginBottom: "16px",
           }}>
-          Portfolio Project • Clean Architecture & DDD
+          <Building2 size={15} />
+          <span>PT Lumbung Pangan Nusantara • Sistem Informasi Enterprise</span>
         </div>
         <h1
           style={{
             fontFamily: "var(--font-serif)",
-            fontSize: "2.5rem",
+            fontSize: "2.6rem",
             fontWeight: 700,
             color: "var(--ink)",
             marginBottom: "16px",
             lineHeight: 1.2,
           }}>
-          Lumbung Mini ERP
+          Lumbung Enterprise Resource Planning
         </h1>
         <p
           style={{
-            fontSize: "1.1rem",
+            fontSize: "1.05rem",
             color: "var(--ink-2)",
-            maxWidth: "760px",
+            maxWidth: "780px",
             margin: "0 auto 32px",
             lineHeight: 1.6,
           }}>
-          Sistem operasional distribusi sembako & bahan pangan dengan integritas
-          data tinggi. Menghubungkan alur pengadaan pemasok, mutasi stok fisik,
-          reservasi pesanan, pengiriman surat jalan, hingga penagihan faktur dan
-          pembayaran Midtrans.
+          Platform terpadu rantai pasok dan operasional komoditas pangan
+          nasional. Menyediakan jaminan integritas data dari pengadaan barang
+          pemasok, penelusuran buku besar mutasi gudang, reservasi pesanan
+          penjualan, hingga penagihan faktur resmi.
         </p>
 
         <div
           style={{
             display: "flex",
             justifyContent: "center",
-            gap: "12px",
+            gap: "14px",
             flexWrap: "wrap",
           }}>
           <button
-            onClick={() => handleLaunch("admin")}
+            onClick={() => onNavigate("dashboard")}
             className="btn-primary"
-            style={{ padding: "10px 24px", fontSize: "1rem" }}>
-            🚀 Masuk Dashboard Demo (Admin)
+            style={{
+              padding: "10px 24px",
+              fontSize: "0.95rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}>
+            <span>Buka Dashboard Operasional</span>
+            <ArrowRight size={16} />
           </button>
           <button
             onClick={() => onNavigate("public_invoice")}
             className="btn-secondary"
-            style={{ padding: "10px 24px", fontSize: "1rem" }}>
-            📄 Lihat Simulasi Faktur Publik
+            style={{
+              padding: "10px 24px",
+              fontSize: "0.95rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}>
+            <CreditCard size={16} />
+            <span>Portal Pembayaran Faktur</span>
           </button>
         </div>
       </section>
 
-      {/* Persona Showcase Grid */}
+      {/* Corporate Division Access Grid */}
       <section style={{ marginBottom: "64px" }}>
         <h2
           style={{
@@ -95,8 +122,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             marginBottom: "20px",
             borderBottom: "1px solid var(--line)",
             paddingBottom: "10px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
           }}>
-          Pilih Persona Demo (Role-Based Access Control)
+          <UserCheck size={20} color="var(--grain)" />
+          <span>
+            Akses Cepat Divisi Operasional (Role-Based Access Control)
+          </span>
         </h2>
         <div
           style={{
@@ -125,7 +158,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 }}>
                 <h3
                   style={{
-                    fontSize: "1.1rem",
+                    fontSize: "1.05rem",
                     fontWeight: 600,
                     color: "var(--ink)",
                   }}>
@@ -140,7 +173,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     borderRadius: "2px",
                     fontWeight: 600,
                   }}>
-                  Admin
+                  Administrator
                 </span>
               </div>
               <p
@@ -148,16 +181,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   fontSize: "var(--t-small)",
                   color: "var(--ink-2)",
                   marginBottom: "16px",
+                  lineHeight: 1.45,
                 }}>
-                Memiliki hak akses penuh untuk mengelola master data, audit
-                trail, pemicu alert Telegram, dan reset sistem.
+                Akses tata kelola master data, jejak audit (audit trail),
+                konfigurasi sistem, dan integrasi notifikasi operasional.
               </p>
             </div>
             <button
               onClick={() => handleLaunch("admin")}
               className="btn-secondary"
               style={{ width: "100%" }}>
-              Buka sebagai Dewi
+              Masuk sebagai Administrator
             </button>
           </div>
 
@@ -182,7 +216,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 }}>
                 <h3
                   style={{
-                    fontSize: "1.1rem",
+                    fontSize: "1.05rem",
                     fontWeight: 600,
                     color: "var(--ink)",
                   }}>
@@ -197,7 +231,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     borderRadius: "2px",
                     fontWeight: 600,
                   }}>
-                  Sales
+                  Penjualan (Sales)
                 </span>
               </div>
               <p
@@ -205,16 +239,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   fontSize: "var(--t-small)",
                   color: "var(--ink-2)",
                   marginBottom: "16px",
+                  lineHeight: 1.45,
                 }}>
-                Fokus pada input Pesanan Penjualan (SO), pemantauan kuota limit
-                kredit pelanggan, dan status pengiriman.
+                Pengelolaan Pesanan Penjualan (SO), monitoring batas kredit
+                pelanggan, dan koordinasi alokasi kuota komoditas.
               </p>
             </div>
             <button
               onClick={() => handleLaunch("sales")}
               className="btn-secondary"
               style={{ width: "100%" }}>
-              Buka sebagai Budi
+              Masuk sebagai Penjualan
             </button>
           </div>
 
@@ -239,7 +274,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 }}>
                 <h3
                   style={{
-                    fontSize: "1.1rem",
+                    fontSize: "1.05rem",
                     fontWeight: 600,
                     color: "var(--ink)",
                   }}>
@@ -254,7 +289,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     borderRadius: "2px",
                     fontWeight: 600,
                   }}>
-                  Gudang
+                  Logistik & Gudang
                 </span>
               </div>
               <p
@@ -262,16 +297,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   fontSize: "var(--t-small)",
                   color: "var(--ink-2)",
                   marginBottom: "16px",
+                  lineHeight: 1.45,
                 }}>
-                Mencatat penerimaan barang (Goods Receipt) dari pemasok, opname
-                stok, dan penerbitan Surat Jalan (DO).
+                Pencatatan penerimaan barang (Goods Receipt), opname persediaan,
+                dan penerbitan Surat Jalan (Delivery Order).
               </p>
             </div>
             <button
               onClick={() => handleLaunch("warehouse")}
               className="btn-secondary"
               style={{ width: "100%" }}>
-              Buka sebagai Siti
+              Masuk sebagai Gudang
             </button>
           </div>
 
@@ -296,7 +332,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 }}>
                 <h3
                   style={{
-                    fontSize: "1.1rem",
+                    fontSize: "1.05rem",
                     fontWeight: 600,
                     color: "var(--ink)",
                   }}>
@@ -311,7 +347,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     borderRadius: "2px",
                     fontWeight: 600,
                   }}>
-                  Keuangan
+                  Keuangan (Finance)
                 </span>
               </div>
               <p
@@ -319,16 +355,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   fontSize: "var(--t-small)",
                   color: "var(--ink-2)",
                   marginBottom: "16px",
+                  lineHeight: 1.45,
                 }}>
-                Menerbitkan Faktur (Invoice), memvalidasi pembayaran
-                transfer/Midtrans, serta memantau Laporan Umur Piutang.
+                Penerbitan faktur pajak/komersial resmi, rekonsiliasi pembayaran
+                perbankan, dan monitoring laporan umur piutang.
               </p>
             </div>
             <button
               onClick={() => handleLaunch("finance")}
               className="btn-secondary"
               style={{ width: "100%" }}>
-              Buka sebagai Rudi
+              Masuk sebagai Keuangan
             </button>
           </div>
         </div>
@@ -343,8 +380,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             marginBottom: "20px",
             borderBottom: "1px solid var(--line)",
             paddingBottom: "10px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
           }}>
-          Prinsip Rekayasa Perangkat Lunak & Clean Architecture
+          <Cpu size={20} color="var(--grain)" />
+          <span>Prinsip Keandalan Arsitektur Perangkat Lunak Enterprise</span>
         </h2>
         <div
           style={{
@@ -359,24 +400,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               border: "1px solid var(--line)",
               borderRadius: "var(--radius)",
             }}>
-            <h4
+            <div
               style={{
-                fontWeight: 600,
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
                 marginBottom: "8px",
-                color: "var(--grain)",
               }}>
-              🎯 Zero-Float Integer Currency & Tax
-            </h4>
+              <FileCode2 size={18} color="var(--grain)" />
+              <h4 style={{ fontWeight: 600, color: "var(--grain)" }}>
+                Zero-Float Integer Currency & Tax
+              </h4>
+            </div>
             <p
               style={{
                 fontSize: "var(--t-small)",
                 color: "var(--ink-2)",
                 lineHeight: 1.5,
               }}>
-              Semua kalkulasi nilai uang disimpan dalam integer Rupiah. Diskon
-              dan PPN 11% dikalkulasi dengan basis points (1100 bp) menggunakan
-              pembulatan Half-Up integer, menjamin tidak ada pembulatan
-              mengambang (float drift).
+              Semua nilai finansial disimpan dalam integer Rupiah. Diskon dan
+              PPN 11% dikalkulasi dengan basis points (1100 bp) menggunakan
+              algoritma pembulatan Half-Up integer, menjamin nihil deviasi
+              desimal.
             </p>
           </div>
 
@@ -387,24 +432,27 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               border: "1px solid var(--line)",
               borderRadius: "var(--radius)",
             }}>
-            <h4
+            <div
               style={{
-                fontWeight: 600,
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
                 marginBottom: "8px",
-                color: "var(--grain)",
               }}>
-              🔒 Buku Besar Stok & Concurrency-Safe
-            </h4>
+              <Database size={18} color="var(--moss)" />
+              <h4 style={{ fontWeight: 600, color: "var(--moss)" }}>
+                Buku Besar Stok & Concurrency-Safe
+              </h4>
+            </div>
             <p
               style={{
                 fontSize: "var(--t-small)",
                 color: "var(--ink-2)",
                 lineHeight: 1.5,
               }}>
-              Tabel buku besar <code>stock_moves</code> append-only menjamin
-              jejak audit tak terbantahkan. Pengecekan saldo memanfaatkan{" "}
-              <code>SELECT ... FOR UPDATE</code> dan constraint PostgreSQL{" "}
-              <code>CHECK (on_hand &gt;= 0)</code>.
+              Tabel buku besar <code>stock_moves</code> bersifat append-only.
+              Verifikasi saldo menggunakan <code>SELECT ... FOR UPDATE</code>{" "}
+              serta constraint database <code>CHECK (on_hand &gt;= 0)</code>.
             </p>
           </div>
 
@@ -415,24 +463,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               border: "1px solid var(--line)",
               borderRadius: "var(--radius)",
             }}>
-            <h4
+            <div
               style={{
-                fontWeight: 600,
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
                 marginBottom: "8px",
-                color: "var(--grain)",
               }}>
-              ⚡ Integrasi Midtrans & Webhook Idempoten
-            </h4>
+              <ShieldCheck size={18} color="var(--amber)" />
+              <h4 style={{ fontWeight: 600, color: "var(--amber)" }}>
+                Integrasi Pembayaran Idempoten
+              </h4>
+            </div>
             <p
               style={{
                 fontSize: "var(--t-small)",
                 color: "var(--ink-2)",
                 lineHeight: 1.5,
               }}>
-              Tautan pembayaran publik acak 128-bit dengan verifikasi tanda
-              tangan SHA-512 constant-time. Tabel <code>webhook_events</code>{" "}
-              memastikan setiap notifikasi pembayaran diproses tepat satu kali
-              (exactly-once processing).
+              Token faktur 128-bit dengan validasi tanda tangan SHA-512
+              constant-time. Tabel <code>webhook_events</code> menjamin
+              pemrosesan mutasi pembayaran tepat satu kali (exactly-once
+              processing).
             </p>
           </div>
         </div>

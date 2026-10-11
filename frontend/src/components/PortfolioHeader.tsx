@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { api, UserSession } from "../api/client";
+import { Logo } from "./Logo";
 
 interface PortfolioHeaderProps {
   currentUser: UserSession | null;
@@ -12,7 +13,7 @@ export const PortfolioHeader: React.FC<PortfolioHeaderProps> = ({
   currentUser,
   onUserChange,
   onNavigate,
-  activeTab,
+  activeTab: _activeTab,
 }) => {
   const [loadingRole, setLoadingRole] = useState<string | null>(null);
   const [isResetting, setIsResetting] = useState(false);
@@ -35,7 +36,7 @@ export const PortfolioHeader: React.FC<PortfolioHeaderProps> = ({
   ) => {
     try {
       setLoadingRole(role);
-      const user = await api.demoLogin(role);
+      const user = await api.switchRole(role);
       onUserChange(user);
     } catch (err: any) {
       alert(`Gagal berganti persona: ${err.message}`);
@@ -112,7 +113,7 @@ export const PortfolioHeader: React.FC<PortfolioHeaderProps> = ({
                 fontWeight: 700,
                 fontSize: "1rem",
               }}>
-              🌾
+              <Logo size="sm" showText={false} />
             </div>
             <div>
               <span
@@ -250,7 +251,7 @@ export const PortfolioHeader: React.FC<PortfolioHeaderProps> = ({
               color: "var(--ink-2)",
             }}
             title="Ganti Tema">
-            {isDark ? "☀️ Terang" : "🌙 Gelap"}
+            {isDark ? "Mode Terang" : "Mode Gelap"}
           </button>
         </div>
       </div>

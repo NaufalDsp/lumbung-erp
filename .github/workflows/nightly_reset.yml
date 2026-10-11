@@ -1,0 +1,21 @@
+name: Nightly Demo Data Reset
+
+on:
+  schedule:
+    # Setap hari pukul 00:00 UTC (07:00 WIB)
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  reset-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Demo Reset API
+        env:
+          API_URL: ${{ secrets.PRODUCTION_API_URL || 'https://api.lumbung.local' }}
+          INTERNAL_SECRET: ${{ secrets.INTERNAL_JOB_SECRET || 'dev-internal-secret' }}
+        run: |
+          echo "Triggering reset on $API_URL/api/v1/system/reset-demo..."
+          curl -s -f -X POST "$API_URL/api/v1/system/reset-demo" \
+            -H "Content-Type: application/json" \
+            -H "X-Internal-Secret: $INTERNAL_SECRET" || echo "API call finished or endpoint offline"

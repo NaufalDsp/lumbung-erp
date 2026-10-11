@@ -8,8 +8,8 @@ from sqlalchemy.orm import selectinload
 from app.api.v1.schemas.invoicing import PublicInvoiceLine, PublicInvoiceResponse
 from app.core.security import hash_token
 from app.domain.enums import PaymentStatus
-from app.models.base import get_db
 from app.models.company import Company
+from app.models.database import get_db
 from app.models.invoicing import Invoice, InvoiceLine, PaymentLink
 from app.models.master import Product
 

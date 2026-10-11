@@ -62,11 +62,11 @@ class RealTelegramNotifier:
         self, product_name: str, sku: str, on_hand: int, min_stock: int
     ) -> bool:
         msg = (
-            "🚨 *PERINGATAN STOK MENIPIS*\n\n"
+            "[PERINGATAN SISTEM] *STOK MENIPIS*\n\n"
             f"*Produk:* {product_name} (`{sku}`)\n"
             f"*Stok Tersedia:* `{on_hand}` unit\n"
             f"*Batas Minimum:* `{min_stock}` unit\n"
-            "_Segera buat Purchase Order (PO) ke pemasok._"
+            "_Segera terbitkan Purchase Order (PO) ke pemasok terkait._"
         )
         return await self.send_message(msg)
 
@@ -74,12 +74,12 @@ class RealTelegramNotifier:
         self, invoice_number: str, amount: int, method: str, customer_name: str
     ) -> bool:
         msg = (
-            "💰 *PEMBAYARAN DITERIMA*\n\n"
+            "[KONFIRMASI KEUANGAN] *PEMBAYARAN DITERIMA*\n\n"
             f"*No Faktur:* `{invoice_number}`\n"
             f"*Pelanggan:* {customer_name}\n"
             f"*Nominal:* *Rp {amount:,}*\n"
             f"*Metode:* `{method.upper()}`\n"
-            "_Status faktur telah diperbarui di sistem Lumbung._"
+            "_Status faktur telah diperbarui di sistem Lumbung ERP._"
         )
         return await self.send_message(msg)
 
@@ -87,7 +87,7 @@ class RealTelegramNotifier:
         self, invoice_number: str, customer_name: str, total: int, due_date: str
     ) -> bool:
         msg = (
-            "⚠️ *FAKTUR JATUH TEMPO*\n\n"
+            "[PERINGATAN PENAGIHAN] *FAKTUR JATUH TEMPO*\n\n"
             f"*No Faktur:* `{invoice_number}`\n"
             f"*Pelanggan:* {customer_name}\n"
             f"*Total Tagihan:* *Rp {total:,}*\n"

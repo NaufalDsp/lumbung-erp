@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none">
+  <!-- Lumbung Roof Structure -->
+  <path d="M6 18L24 6L42 18L38 22L24 12L10 22L6 18Z" fill="#2F4A3A"/>
+  <!-- Central Silo Core & Columns -->
+  <rect x="12" y="22" width="6" height="20" rx="1.5" fill="#2F4A3A"/>
+  <rect x="30" y="22" width="6" height="20" rx="1.5" fill="#2F4A3A"/>
+  <rect x="21" y="24" width="6" height="18" rx="1.5" fill="#2F4A3A" opacity="0.85"/>
+  <!-- Grain / Harvest Accent -->
+  <circle cx="24" cy="18" r="3.5" fill="#9A5B13"/>
+  <path d="M24 15V21M21 18H27" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Foundation Base -->
+  <rect x="8" y="41" width="32" height="3" rx="1.5" fill="#2F4A3A"/>
+</svg>

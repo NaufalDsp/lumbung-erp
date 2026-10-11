@@ -12,6 +12,7 @@ from app.api.v1.purchasing import router as purchasing_router
 from app.api.v1.reports import router as reports_router
 from app.api.v1.sales import router as sales_router
 from app.api.v1.stock import router as stock_router
+from app.api.v1.system import router as system_router
 from app.api.v1.webhooks import router as webhooks_router
 
 api_router = APIRouter()
@@ -27,4 +28,5 @@ api_router.include_router(webhooks_router)
 api_router.include_router(public_router)
 api_router.include_router(reports_router)
 api_router.include_router(notifications_router)
+api_router.include_router(system_router)
 api_router.include_router(audit_router)

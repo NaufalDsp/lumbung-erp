@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ArrowLeft, CheckCircle2, CreditCard, ShieldCheck } from "lucide-react";
 import { formatRupiah } from "../lib/formatters";
 
 interface PublicPaymentPageProps {
@@ -11,9 +12,9 @@ export const PublicPaymentPage: React.FC<PublicPaymentPageProps> = ({
   const [isPaying, setIsPaying] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  // Demo invoice data simulating public portal view
+  // Official invoice data for public portal view
   const invoice = {
-    number: "INV-2025-000001",
+    number: "INV-2026-000001",
     customer_name: "Toko Sembako Berkah Jaya",
     company_name: "PT Lumbung Pangan Nusantara",
     issued_at: "11 Okt 2026",
@@ -49,9 +50,6 @@ export const PublicPaymentPage: React.FC<PublicPaymentPageProps> = ({
     setTimeout(() => {
       setIsPaying(false);
       setPaymentSuccess(true);
-      alert(
-        "Simulasi pembayaran Midtrans Snap berhasil diselesaikan (Status: LUNAS)!",
-      );
     }, 1200);
   };
 
@@ -64,9 +62,10 @@ export const PublicPaymentPage: React.FC<PublicPaymentPageProps> = ({
           marginBottom: "20px",
           display: "inline-flex",
           alignItems: "center",
-          gap: "6px",
+          gap: "8px",
         }}>
-        ← Kembali ke Aplikasi ERP
+        <ArrowLeft size={16} />
+        <span>Kembali ke Sistem ERP</span>
       </button>
 
       <div
@@ -113,7 +112,9 @@ export const PublicPaymentPage: React.FC<PublicPaymentPageProps> = ({
           <div style={{ textAlign: "right" }}>
             <span
               style={{
-                display: "inline-block",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
                 padding: "6px 12px",
                 borderRadius: "var(--radius-tag)",
                 fontWeight: 700,
@@ -125,7 +126,12 @@ export const PublicPaymentPage: React.FC<PublicPaymentPageProps> = ({
                 color:
                   invoice.status === "LUNAS" ? "var(--moss)" : "var(--amber)",
               }}>
-              ● {invoice.status}
+              {invoice.status === "LUNAS" ? (
+                <CheckCircle2 size={14} />
+              ) : (
+                <CreditCard size={14} />
+              )}
+              {invoice.status}
             </span>
           </div>
         </div>
@@ -293,9 +299,16 @@ export const PublicPaymentPage: React.FC<PublicPaymentPageProps> = ({
                 fontSize: "var(--t-small)",
                 color: "var(--ink-3)",
                 marginBottom: "16px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "6px",
               }}>
-              Pembayaran aman diproses langsung via payment gateway Midtrans
-              (QRIS, BCA Virtual Account, Mandiri, GoPay).
+              <ShieldCheck size={16} color="var(--moss)" />
+              <span>
+                Pembayaran resmi terproteksi payment gateway Midtrans (QRIS, BCA
+                VA, Mandiri VA, GoPay).
+              </span>
             </p>
             <button
               onClick={handlePay}
@@ -318,9 +331,15 @@ export const PublicPaymentPage: React.FC<PublicPaymentPageProps> = ({
               backgroundColor: "var(--moss-wash)",
               padding: "16px",
               borderRadius: "var(--radius)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
             }}>
+            <CheckCircle2 size={20} color="var(--moss)" />
             <span style={{ color: "var(--moss)", fontWeight: 600 }}>
-              ✓ Terima kasih! Tagihan telah lunas dibayar.
+              Tagihan telah lunas dibayar. Tanda terima digital telah dikirimkan
+              ke email terdaftar.
             </span>
           </div>
         )}

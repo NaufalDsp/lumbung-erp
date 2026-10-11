@@ -3,15 +3,16 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.api.deps import get_current_user, require_permission
+from app.api.deps import AuthenticatedUser, get_current_user, require_permission
 from app.api.v1.schemas.invoicing import (
     CreateInvoiceRequest,
     InvoiceResponse,
     PaymentLinkResponse,
 )
+from app.core.permissions import Permission
 from app.domain.enums import UserRole
 from app.domain.exceptions import DomainError
-from app.models.base import get_db
+from app.models.database import get_db
 from app.models.invoicing import Invoice
 from app.models.user import User
 from app.services.invoicing import (
@@ -53,7 +54,8 @@ async def list_invoices(
 async def create_invoice(
     req: CreateInvoiceRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_permission("create", "invoice")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.INVOICE_ISSUE)),
 ):
     try:
         inv = await create_invoice_from_deliveries(
@@ -78,7 +80,7 @@ async def create_invoice(
 async def get_invoice(
     invoice_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: AuthenticatedUser = Depends(get_current_user),
 ):
     stmt = (
         select(Invoice)
@@ -99,7 +101,8 @@ async def get_invoice(
 async def issue_invoice_endpoint(
     invoice_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_permission("issue", "invoice")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.INVOICE_ISSUE)),
 ):
     try:
         inv = await issue_invoice(db=db, invoice_id=invoice_id, user_id=current_user.id)
@@ -118,7 +121,8 @@ async def issue_invoice_endpoint(
 async def void_invoice_endpoint(
     invoice_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_permission("void", "invoice")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.INVOICE_ISSUE)),
 ):
     try:
         inv = await void_invoice(db=db, invoice_id=invoice_id, user_id=current_user.id)
@@ -137,7 +141,8 @@ async def void_invoice_endpoint(
 async def create_payment_link_endpoint(
     invoice_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_permission("create", "payment")),
+    current_user: AuthenticatedUser = Depends(
+        require_permission(Permission.INVOICE_ISSUE)),
 ):
     try:
         raw_token, expires_at, snap_token = await create_payment_link(

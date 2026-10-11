@@ -1,136 +1,67 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { api, UserSession } from "./api/client";
 import { ColdStartBanner } from "./components/ColdStartBanner";
-import { PortfolioHeader } from "./components/PortfolioHeader";
+import { Navbar } from "./components/Navbar";
 import { DashboardView } from "./pages/DashboardView";
 import { LandingPage } from "./pages/LandingPage";
+import { LoginPage } from "./pages/LoginPage";
 import { PublicPaymentPage } from "./pages/PublicPaymentPage";
 
 export function App() {
-  const [currentUser, setCurrentUser] = useState<UserSession | null>(
+  const [currentUser, setCurrentUser] = useState<UserSession | null>(() =>
     api.getCurrentUser(),
   );
-  const [activeTab, setActiveTab] = useState<string>("landing");
+  const [activeTab, setActiveTab] = useState<string>("dashboard");
 
-  useEffect(() => {
-    // If no user session exists yet, default to Dewi (Admin) for demo convenience
-    if (!currentUser) {
-      api
-        .demoLogin("admin")
-        .then((user) => setCurrentUser(user))
-        .catch(() => {
-          // If offline or cold start, set demo local fallback
-          const fallbackUser: UserSession = {
-            id: 1,
-            email: "dewi.admin@lumbung.local",
-            name: "Dewi Sartika",
-            role: "admin",
-            is_active: true,
-          };
-          setCurrentUser(fallbackUser);
-        });
-    }
-  }, []);
+  const handleLoginSuccess = (user: UserSession) => {
+    setCurrentUser(user);
+    setActiveTab("dashboard");
+  };
 
+  const handleLogout = () => {
+    api.logout();
+    setCurrentUser(null);
+  };
+
+  // If unauthenticated, present the official corporate login portal
+  if (!currentUser) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          backgroundColor: "var(--paper)",
+          color: "var(--ink)",
+        }}>
+        <ColdStartBanner />
+        <LoginPage onLoginSuccess={handleLoginSuccess} />
+      </div>
+    );
+  }
+
+  // Authenticated enterprise portal
   return (
     <div
       style={{
         minHeight: "100vh",
         backgroundColor: "var(--paper)",
         color: "var(--ink)",
+        display: "flex",
+        flexDirection: "column",
       }}>
       {/* Cold-start detection banner */}
       <ColdStartBanner />
 
-      {/* Portfolio Header with Demo Persona Switcher */}
-      <PortfolioHeader
+      {/* Official Enterprise Navigation Bar */}
+      <Navbar
         currentUser={currentUser}
-        onUserChange={setCurrentUser}
-        onNavigate={setActiveTab}
         activeTab={activeTab}
+        onNavigate={setActiveTab}
+        onLogout={handleLogout}
+        onUserChange={setCurrentUser}
       />
 
-      {/* Sub Navigation Bar */}
-      <div
-        style={{
-          borderBottom: "1px solid var(--line)",
-          backgroundColor: "var(--surface)",
-          padding: "0 24px",
-        }}>
-        <div
-          style={{
-            maxWidth: "1400px",
-            margin: "0 auto",
-            display: "flex",
-            gap: "24px",
-            fontSize: "var(--t-small)",
-          }}>
-          <button
-            onClick={() => setActiveTab("landing")}
-            style={{
-              padding: "12px 4px",
-              border: "none",
-              borderBottom:
-                activeTab === "landing"
-                  ? "2px solid var(--grain)"
-                  : "2px solid transparent",
-              backgroundColor: "transparent",
-              color: activeTab === "landing" ? "var(--grain)" : "var(--ink-2)",
-              fontWeight: activeTab === "landing" ? 600 : 400,
-              cursor: "pointer",
-            }}>
-            🏠 Arsitektur & Cerita Produk
-          </button>
-
-          <button
-            onClick={() => setActiveTab("dashboard")}
-            style={{
-              padding: "12px 4px",
-              border: "none",
-              borderBottom:
-                activeTab === "dashboard"
-                  ? "2px solid var(--grain)"
-                  : "2px solid transparent",
-              backgroundColor: "transparent",
-              color:
-                activeTab === "dashboard" ? "var(--grain)" : "var(--ink-2)",
-              fontWeight: activeTab === "dashboard" ? 600 : 400,
-              cursor: "pointer",
-            }}>
-            📊 Dashboard Operasional
-          </button>
-
-          <button
-            onClick={() => setActiveTab("public_invoice")}
-            style={{
-              padding: "12px 4px",
-              border: "none",
-              borderBottom:
-                activeTab === "public_invoice"
-                  ? "2px solid var(--grain)"
-                  : "2px solid transparent",
-              backgroundColor: "transparent",
-              color:
-                activeTab === "public_invoice"
-                  ? "var(--grain)"
-                  : "var(--ink-2)",
-              fontWeight: activeTab === "public_invoice" ? 600 : 400,
-              cursor: "pointer",
-            }}>
-            🧾 Simulasi Bayar Faktur (Midtrans Snap)
-          </button>
-        </div>
-      </div>
-
-      {/* Main Content Area */}
-      <main>
-        {activeTab === "landing" && (
-          <LandingPage
-            onLoginPersona={setCurrentUser}
-            onNavigate={setActiveTab}
-          />
-        )}
-
+      {/* Main Corporate Workspace */}
+      <main style={{ flex: 1 }}>
         {activeTab === "dashboard" && (
           <DashboardView currentUser={currentUser} onNavigate={setActiveTab} />
         )}
@@ -138,22 +69,45 @@ export function App() {
         {activeTab === "public_invoice" && (
           <PublicPaymentPage onBackToApp={() => setActiveTab("dashboard")} />
         )}
+
+        {activeTab === "architecture" && (
+          <LandingPage
+            onLoginPersona={setCurrentUser}
+            onNavigate={setActiveTab}
+          />
+        )}
       </main>
 
-      {/* Footer */}
+      {/* Enterprise Footer */}
       <footer
         style={{
           borderTop: "1px solid var(--line)",
-          padding: "24px",
+          backgroundColor: "var(--surface)",
+          padding: "20px 24px",
           textAlign: "center",
           fontSize: "var(--t-small)",
           color: "var(--ink-3)",
-          marginTop: "60px",
+          marginTop: "40px",
         }}>
-        <p>
-          <strong>Lumbung Mini ERP</strong> • Dibangun dengan prinsip Clean
-          Architecture, DDD Taktis, dan Presisi Integer Rupiah.
-        </p>
+        <div
+          style={{
+            maxWidth: "1440px",
+            margin: "0 auto",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "12px",
+          }}>
+          <span>
+            © 2026 <strong>PT Lumbung Pangan Nusantara</strong>. Hak Cipta
+            Dilindungi Undang-Undang.
+          </span>
+          <span style={{ fontSize: "0.75rem", color: "var(--ink-3)" }}>
+            Sistem Informasi Operasional Terpadu • Zero-Float Integer Currency •
+            Append-Only Ledger
+          </span>
+        </div>
       </footer>
     </div>
   );
