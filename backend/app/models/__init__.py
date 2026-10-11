@@ -3,6 +3,13 @@ from app.models.base import Base, TimestampMixin
 from app.models.company import Company
 from app.models.database import async_session_maker, engine, get_db
 from app.models.doc_sequence import DocSequence
+from app.models.invoicing import (
+    Invoice,
+    InvoiceLine,
+    Payment,
+    PaymentLink,
+    WebhookEvent,
+)
 from app.models.master import Category, Customer, Product, Supplier
 from app.models.purchasing import (
     GoodsReceipt,
@@ -45,4 +52,9 @@ __all__ = [
     "SalesOrderLine",
     "Delivery",
     "DeliveryLine",
+    "Invoice",
+    "InvoiceLine",
+    "Payment",
+    "PaymentLink",
+    "WebhookEvent",
 ]
