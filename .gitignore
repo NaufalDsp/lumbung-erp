@@ -56,6 +56,11 @@ frontend/dist-ssr/
 .DS_Store
 Thumbs.db
 
+# Databases & Local state
+*.db
+*.sqlite
+*.sqlite3
+
 # Documentation / Markdown
 *.md
 !README.md

@@ -20,7 +20,7 @@ class StockMove(Base):
     __tablename__ = "stock_moves"
 
     id: Mapped[int] = mapped_column(
-        BigInteger, primary_key=True, autoincrement=True)
+        BigInteger().with_variant(Integer, "sqlite"), primary_key=True, autoincrement=True)
     product_id: Mapped[int] = mapped_column(
         Integer, nullable=False, index=True)
     warehouse_id: Mapped[int] = mapped_column(

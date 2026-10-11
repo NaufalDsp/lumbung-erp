@@ -103,10 +103,10 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
 
     # 3. Categories
     categories = [
-        Category(id=1, name="Beras", code="BERAS"),
-        Category(id=2, name="Minyak Goreng", code="MINYAK"),
-        Category(id=3, name="Gula Pasir", code="GULA"),
-        Category(id=4, name="Tepung Terigu", code="TEPUNG"),
+        Category(id=1, name="Beras"),
+        Category(id=2, name="Minyak Goreng"),
+        Category(id=3, name="Gula Pasir"),
+        Category(id=4, name="Tepung Terigu"),
     ]
     db.add_all(categories)
     await db.flush()
@@ -115,8 +115,8 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
     suppliers = [
         Supplier(
             id=1,
+            code="SPL-001",
             name="Penggilingan Padi Subang Makmur",
-            contact_person="H. Sobri",
             phone="08123456701",
             email="sobri@subangpadi.local",
             address="Jl. Raya Pagaden No. 45, Subang",
@@ -124,8 +124,8 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         ),
         Supplier(
             id=2,
+            code="SPL-002",
             name="PT Sumber Sawit Sejahtera",
-            contact_person="Bambang Wijaya",
             phone="08123456702",
             email="sales@sumbersawit.local",
             address="Kawasan Industri Cikarang Blok C-12",
@@ -133,8 +133,8 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         ),
         Supplier(
             id=3,
+            code="SPL-003",
             name="Pabrik Gula Rafinasi Nusantara",
-            contact_person="Irwan Siregar",
             phone="08123456703",
             email="irwan@gularafinasi.local",
             address="Jl. Pelabuhan Tanjung Priok No. 8",
@@ -148,8 +148,8 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
     customers = [
         Customer(
             id=1,
+            code="CST-001",
             name="Toko Sembako Berkah Jaya",
-            contact_person="Ko Ahong",
             phone="08139876501",
             email="berkahjaya@gmail.local",
             address="Pasar Induk Kramat Jati Los B No. 20",
@@ -159,8 +159,8 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         ),
         Customer(
             id=2,
+            code="CST-002",
             name="CV Pangan Makmur Abadi",
-            contact_person="Ibu Linda",
             phone="08139876502",
             email="makmurabadi@cvemail.local",
             address="Jl. Boulevard Raya Blok QJ No. 5, Kelapa Gading",
@@ -170,8 +170,8 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         ),
         Customer(
             id=3,
+            code="CST-003",
             name="Restoran Sari Rasa Minang",
-            contact_person="Datuk Maringgai",
             phone="08139876503",
             email="sarirasa@kuliner.local",
             address="Jl. Pemuda No. 77, Rawamangun",
@@ -191,7 +191,7 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
             sku="BRS-PND-05K",
             name="Beras Pandan Wangi Premium 5kg",
             unit="sak",
-            cogs_amount=68000,
+            last_buy_price=68000,
             sell_price=76000,
             min_stock=50,
             is_active=True,
@@ -202,7 +202,7 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
             sku="BRS-RMS-05K",
             name="Beras Setra Ramos 5kg",
             unit="sak",
-            cogs_amount=62000,
+            last_buy_price=62000,
             sell_price=69500,
             min_stock=40,
             is_active=True,
@@ -213,7 +213,7 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
             sku="MYK-SNI-02L",
             name="Minyak Goreng Sania Pouch 2L",
             unit="pouch",
-            cogs_amount=30500,
+            last_buy_price=30500,
             sell_price=34500,
             min_stock=100,
             is_active=True,
@@ -224,7 +224,7 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
             sku="MYK-TRP-02L",
             name="Minyak Goreng Tropical Botol 2L",
             unit="botol",
-            cogs_amount=32000,
+            last_buy_price=32000,
             sell_price=36500,
             min_stock=60,
             is_active=True,
@@ -235,7 +235,7 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
             sku="GLA-GLK-01K",
             name="Gulaku Gula Tebu Premium 1kg",
             unit="pack",
-            cogs_amount=15200,
+            last_buy_price=15200,
             sell_price=17500,
             min_stock=80,
             is_active=True,
@@ -246,7 +246,7 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
             sku="TPG-SGT-01K",
             name="Tepung Terigu Segitiga Biru 1kg",
             unit="pack",
-            cogs_amount=11000,
+            last_buy_price=11000,
             sell_price=13000,
             min_stock=50,
             is_active=True,
@@ -266,16 +266,22 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
     ]
 
     for p_id, qty, cost in initial_stocks:
-        bal = StockBalance(product_id=p_id, on_hand=qty, reserved=0)
+        bal = StockBalance(
+            product_id=p_id,
+            warehouse_id=1,
+            on_hand=qty,
+            reserved=0,
+            avg_cost=cost,
+        )
         db.add(bal)
         move = StockMove(
             product_id=p_id,
+            warehouse_id=1,
             qty=qty,
             unit_cost=cost,
-            kind=StockMoveKind.RECEIPT.value,
-            ref_type="INIT",
-            ref_id=1,
-            notes="Saldo awal inisialisasi sistem",
+            kind=StockMoveKind.PENERIMAAN.value,
+            doc_type="GR",
+            doc_id=1,
             created_by=1,
         )
         db.add(move)
@@ -285,9 +291,8 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         id=1,
         number="PO-2026-000001",
         supplier_id=1,
-        status=PurchaseOrderStatus.SELESAI.value,
-        total=13600000,
-        order_date=now - timedelta(days=10),
+        status=PurchaseOrderStatus.DITERIMA.value,
+        ordered_at=now - timedelta(days=10),
         notes="Pengadaan stok beras awal bulan",
         created_by=1,
     )
@@ -299,8 +304,8 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         po_id=po1.id,
         product_id=1,
         qty=200,
-        unit_price=68000,
-        subtotal=13600000,
+        unit_cost=68000,
+        received_qty=200,
     )
     db.add(po_line1)
 
@@ -308,9 +313,10 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         id=1,
         number="GR-2026-000001",
         po_id=po1.id,
+        supplier_id=1,
         received_at=now - timedelta(days=9),
         notes="Diterima lengkap oleh Gudang Siti",
-        received_by=3,
+        created_by=3,
     )
     db.add(gr1)
     await db.flush()
@@ -331,10 +337,7 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         number="SO-2026-000001",
         customer_id=1,
         status=SalesOrderStatus.SELESAI.value,
-        subtotal=2265000,
-        tax=249150,
-        total=2514150,
-        order_date=now - timedelta(days=5),
+        ordered_at=now - timedelta(days=5),
         created_by=2,
     )
     db.add(so1)
@@ -347,7 +350,7 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         qty=20,
         unit_price=76000,
         discount_bp=0,
-        subtotal=1520000,
+        delivered_qty=20,
     )
     so_line2 = SalesOrderLine(
         id=2,
@@ -356,7 +359,7 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         qty=20,
         unit_price=34500,
         discount_bp=0,
-        subtotal=690000,
+        delivered_qty=20,
     )
     db.add_all([so_line1, so_line2])
     await db.flush()
@@ -366,7 +369,7 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         number="DO-2026-000001",
         so_id=so1.id,
         customer_id=1,
-        shipped_at=now - timedelta(days=4),
+        delivered_at=now - timedelta(days=4),
         created_by=3,
     )
     db.add(deliv1)
@@ -378,7 +381,7 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         so_line_id=so_line1.id,
         product_id=1,
         qty=20,
-        cogs_at_delivery=68000,
+        unit_cost_snapshot=68000,
     )
     deliv_line2 = DeliveryLine(
         id=2,
@@ -386,7 +389,7 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
         so_line_id=so_line2.id,
         product_id=3,
         qty=20,
-        cogs_at_delivery=30500,
+        unit_cost_snapshot=30500,
     )
     db.add_all([deliv_line1, deliv_line2])
     await db.flush()
@@ -443,12 +446,12 @@ async def seed_all_data(db: AsyncSession) -> dict[str, int]:
 
     # 10. DocSequences seed
     sequences = [
-        DocSequence(doc_type=DocType.PO.value, year=2026, current_number=1),
-        DocSequence(doc_type=DocType.GR.value, year=2026, current_number=1),
-        DocSequence(doc_type=DocType.SO.value, year=2026, current_number=1),
-        DocSequence(doc_type=DocType.DO.value, year=2026, current_number=1),
-        DocSequence(doc_type=DocType.INV.value, year=2026, current_number=1),
-        DocSequence(doc_type=DocType.PAY.value, year=2026, current_number=1),
+        DocSequence(doc_type=DocType.PO.value, year=2026, last_value=1),
+        DocSequence(doc_type=DocType.GR.value, year=2026, last_value=1),
+        DocSequence(doc_type=DocType.SO.value, year=2026, last_value=1),
+        DocSequence(doc_type=DocType.DO.value, year=2026, last_value=1),
+        DocSequence(doc_type=DocType.INV.value, year=2026, last_value=1),
+        DocSequence(doc_type=DocType.PAY.value, year=2026, last_value=1),
     ]
     db.add_all(sequences)
 

@@ -15,33 +15,33 @@ from app.models.user import User
 
 security_scheme = HTTPBearer(auto_error=False)
 
-# Fixed Demo Persona Profiles for instant login (PRD Section 11 F1)
+# Fixed Persona Profiles for rapid testing & enterprise personas
 DEMO_PERSONAS: dict[str, dict[str, str | int | bool]] = {
     "admin": {
         "id": 1,
-        "email": "admin@lumbung.local",
-        "name": "Budi Santoso (Admin)",
+        "email": "dewi.sartika@lumbungpangan.co.id",
+        "name": "Dewi Sartika",
         "role": UserRole.ADMIN.value,
         "is_active": True,
     },
     "sales": {
         "id": 2,
-        "email": "sales@lumbung.local",
-        "name": "Rina Wijaya (Penjualan)",
+        "email": "budi.santoso@lumbungpangan.co.id",
+        "name": "Budi Santoso",
         "role": UserRole.SALES.value,
         "is_active": True,
     },
     "warehouse": {
         "id": 3,
-        "email": "warehouse@lumbung.local",
-        "name": "Joko Susilo (Gudang)",
+        "email": "siti.rahayu@lumbungpangan.co.id",
+        "name": "Siti Rahayu",
         "role": UserRole.WAREHOUSE.value,
         "is_active": True,
     },
     "finance": {
         "id": 4,
-        "email": "finance@lumbung.local",
-        "name": "Siti Rahma (Keuangan)",
+        "email": "rudi.hermawan@lumbungpangan.co.id",
+        "name": "Rudi Hermawan",
         "role": UserRole.FINANCE.value,
         "is_active": True,
     },

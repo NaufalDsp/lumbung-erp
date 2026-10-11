@@ -1,5 +1,5 @@
 from app.services.seed import reset_demo_data, seed_all_data
-from app.models.database import async_session_maker, engine
+from app.models.database import async_session_maker, engine, init_db
 from app.models.base import Base
 import asyncio
 import sys
@@ -14,9 +14,7 @@ async def main() -> None:
     reset_flag = "--reset" in sys.argv
 
     print("[INFO] Menghubungkan ke database...")
-    async with engine.begin() as conn:
-        print("[INFO] Memastikan struktur skema tabel database...")
-        await conn.run_sync(Base.metadata.create_all)
+    await init_db()
 
     async with async_session_maker() as session:
         if reset_flag:
@@ -24,7 +22,7 @@ async def main() -> None:
             res = await reset_demo_data(session)
             print(f"[OK] {res['message']}")
         else:
-            print("[INFO] Menjalankan inisialisasi data perusahaan awal...")
+            print("[INFO] Memastikan data awal terinisialisasi...")
             summary = await seed_all_data(session)
             print(f"[OK] Selesai. Data terdaftar: {summary}")
 

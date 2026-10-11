@@ -107,6 +107,11 @@ class ApiClient {
     });
 
     if (!resp.ok) {
+      if (resp.status >= 500) {
+        throw new Error(
+          "Terjadi kendala pada server (Status 500). Mohon periksa koneksi backend.",
+        );
+      }
       let msg = "Kombinasi email dan kata sandi tidak cocok";
       try {
         const err = await resp.json();
