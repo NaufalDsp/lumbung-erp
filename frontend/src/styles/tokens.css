@@ -1,0 +1,93 @@
+:root {
+  /* Warna Dasar (Light Mode) */
+  --paper: #F7F4EC;
+  --surface: #FFFFFF;
+  --surface-2: #EFEBE0;
+  --surface-hover: #F3EFE4;
+  --line: #DDD7C8;
+  --line-strong: #BFB8A5;
+  --ink: #1D1C17;
+  --ink-2: #4F4C42;
+  --ink-3: #7A7667;
+  --grain: #2F4A3A;
+  --grain-hover: #243A2D;
+  --grain-wash: #E4ECE3;
+  --amber: #9A5B13;
+  --amber-wash: #F5E7CF;
+  --brick: #A63A2B;
+  --brick-wash: #F6E1DC;
+  --moss: #3C6B3F;
+  --moss-wash: #E1EEDF;
+  --slate: #4A5A6A;
+  --slate-wash: #E4E9EE;
+
+  /* Tipografi */
+  --font-ui: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-num: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --t-page: 1.375rem;
+  --t-doc: 1.25rem;
+  --t-body: 0.875rem;
+  --t-small: 0.78rem;
+  --t-total: 1.125rem;
+
+  /* Ruang & Bentuk */
+  --row-h: 36px;
+  --row-h-dense: 30px;
+  --radius: 4px;
+  --radius-dialog: 6px;
+  --radius-tag: 2px;
+  --shadow-float: 0 8px 24px rgba(29, 28, 23, 0.14);
+
+  /* Gerak */
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+:root[data-theme="dark"] {
+  --paper: #16150F;
+  --surface: #1E1D16;
+  --surface-2: #27261D;
+  --surface-hover: #2B2A21;
+  --line: #38362B;
+  --line-strong: #514F40;
+  --ink: #EDE9DC;
+  --ink-2: #B8B4A3;
+  --ink-3: #8A8675;
+  --grain: #8FBF98;
+  --grain-hover: #A9D2B1;
+  --grain-wash: #223228;
+  --amber: #E0A257;
+  --brick: #E3796A;
+  --moss: #83BC86;
+  --slate: #9DB1C4;
+  --shadow-float: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* Utilitas Angka dan Mata Uang */
+.num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.money::before {
+  content: "Rp ";
+  color: var(--ink-3);
+}
+
+:focus-visible {
+  outline: 2px solid var(--grain);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
