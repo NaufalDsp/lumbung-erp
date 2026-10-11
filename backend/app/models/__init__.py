@@ -4,6 +4,12 @@ from app.models.company import Company
 from app.models.database import async_session_maker, engine, get_db
 from app.models.doc_sequence import DocSequence
 from app.models.master import Category, Customer, Product, Supplier
+from app.models.purchasing import (
+    GoodsReceipt,
+    GoodsReceiptLine,
+    PurchaseOrder,
+    PurchaseOrderLine,
+)
 from app.models.refresh_token import RefreshToken
 from app.models.stock import StockBalance, StockMove
 from app.models.user import User
@@ -25,4 +31,8 @@ __all__ = [
     "Product",
     "Customer",
     "Supplier",
+    "PurchaseOrder",
+    "PurchaseOrderLine",
+    "GoodsReceipt",
+    "GoodsReceiptLine",
 ]
