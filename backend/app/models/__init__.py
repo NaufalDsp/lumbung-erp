@@ -11,6 +11,12 @@ from app.models.purchasing import (
     PurchaseOrderLine,
 )
 from app.models.refresh_token import RefreshToken
+from app.models.sales import (
+    Delivery,
+    DeliveryLine,
+    SalesOrder,
+    SalesOrderLine,
+)
 from app.models.stock import StockBalance, StockMove
 from app.models.user import User
 
@@ -35,4 +41,8 @@ __all__ = [
     "PurchaseOrderLine",
     "GoodsReceipt",
     "GoodsReceiptLine",
+    "SalesOrder",
+    "SalesOrderLine",
+    "Delivery",
+    "DeliveryLine",
 ]
